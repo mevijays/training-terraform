@@ -18,20 +18,3 @@ provider "local" {
 provider "random" {
 
 }
-
-variable list {
-  type        = list
-  default     = ["rakesh","vijay","imtiyaz","rahul"]
-  description = "description"
-}
-
-resource "random_id" "server" {
-  byte_length = 2
-}
-
-
-resource "local_file" "foo" {
-    count  = length(var.list)
-    content  = "foo! content is this ${count.index}"
-    filename = "${path.module}/foo${count.index}-${random_id.server.hex}.bar"
-}
