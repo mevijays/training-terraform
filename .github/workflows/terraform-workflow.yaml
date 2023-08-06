@@ -80,3 +80,12 @@ jobs:
           token: ${{ secrets.TF_API_TOKEN }} 
           run: ${{ steps.create-run.outputs.run_id }}
           comment: "Discarded from GitHub Actions CI"
+  discard:
+    name: "discard/cancel"
+    runs-on: ubuntu-latest
+    needs: terraform-apply
+    permissions:
+      contents: read
+    steps:
+      - name: 'cancel/reject'
+        run: echo 'deployment cancelled!'
