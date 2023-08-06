@@ -84,7 +84,7 @@ jobs:
     name: "discard/cancel"
     runs-on: ubuntu-latest
     needs: terraform-apply
-    if: failure() && jobs.terraform-apply.outcome != 'success'
+    if: failure() && needs.terraform-apply.outcome != 'success'
     permissions:
       contents: read
     steps:
