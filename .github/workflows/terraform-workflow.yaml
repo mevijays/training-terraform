@@ -74,3 +74,10 @@ jobs:
         with:
           run: ${{ steps.apply-run.outputs.run_id }}
           comment: "Apply Run from GitHub Actions CI ${{ github.sha }}"
+      - uses: hashicorp/tfc-workflows-github/actions/discard-run@v1.0.2
+        if: ${{ cancelled() }}
+        id: discard
+        with:
+          token: ${{ secrets.TF_API_TOKEN }} 
+          run: ${{ steps.create-run.outputs.run_id }}
+          comment: "Discarded from GitHub Actions CI"
