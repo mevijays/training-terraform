@@ -46,6 +46,7 @@ jobs:
     name: "Terraform Apply"
     runs-on: ubuntu-latest
     environment: deploy
+    needs: terraform-plan
     permissions:
       contents: read
     steps:
