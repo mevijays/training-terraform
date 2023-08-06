@@ -21,10 +21,6 @@ variable "tfc_azure_dynamic_credentials" {
       client_id_file_path = string
       oidc_token_file_path = string
     })
-    aliases = map(object({
-      client_id_file_path = string
-      oidc_token_file_path = string
-    }))
   })
 }
 
