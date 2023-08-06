@@ -9,20 +9,9 @@ terraform {
 }
 provider "azurerm" {
   features {}
-  // Set this to true as we are using OIDC
-  use_oidc = true
-  client_id_file_path = var.tfc_azure_dynamic_credentials.default.client_id_file_path
-  oidc_token_file_path = var.tfc_azure_dynamic_credentials.default.oidc_token_file_path
+#  use_oidc = true
 }
-variable "tfc_azure_dynamic_credentials" {
-  description = "Object containing Azure dynamic credentials configuration"
-  type = object({
-    default = object({
-      client_id_file_path = string
-      oidc_token_file_path = string
-    })
-  })
-}
+
 
 variable "VMCOUNT" {
   default  = 2
