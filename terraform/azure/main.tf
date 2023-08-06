@@ -1,23 +1,37 @@
-name: Run Azure Login with OpenID Connect
-on: [ workflow_dispatch ]
+terraform {
+  required_providers {
+    local = {
+      source  = "hashicorp/local"
+      version = "2.2.3"
+    }
+    random = {
+      source = "hashicorp/random"
+      version = "3.3.2"
+    }
+  }
+}
 
-permissions:
-      id-token: write
-      contents: read
-      
-jobs: 
-  build-and-deploy:
-    runs-on: mylab-vm
-    steps:
-    - name: 'Az CLI login'
-      uses: azure/login@v1
-      with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-  
-    - name: 'Run Azure CLI commands'
-      run: |
-          az account show
-          az group list
-          pwd
+provider "local" {
+  # Configuration options
+}
+
+provider "random" {
+
+}
+
+variable list {
+  type        = list
+  default     = ["rakesh","vijay","imtiyaz","rahul"]
+  description = "description"
+}
+
+resource "random_id" "server" {
+  byte_length = 2
+}
+
+
+resource "local_file" "foo" {
+    count  = length(var.list)
+    content  = "foo! content is this ${count.index}"
+    filename = "${path.module}/foo${count.index}-${random_id.server.hex}.bar"
+}
