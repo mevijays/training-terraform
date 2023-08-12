@@ -3,7 +3,7 @@ provider "google" {
   region  = var.gcp_region
   zone    = var.gcp_zone
 }
-
+/*
 resource "google_compute_instance" "vm_instance" {
   name         = "terraform-instance"
   machine_type = var.machine_type
@@ -31,3 +31,4 @@ resource "google_compute_instance" "vm_instance" {
 
   tags = var.tags
 }
+*/
