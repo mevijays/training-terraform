@@ -2,6 +2,14 @@ name: "Terraform cloud run"
 
 on:
   workflow_dispatch:
+    inputs:
+      name:
+        type: choice
+        description: cloud
+        options: 
+        - aws
+        - gcp
+        - azure
 permissions:
   contents: read
   id-token: write
@@ -10,7 +18,7 @@ env:
   TF_CLOUD_ORGANIZATION: "mevijays"
   TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
   TF_WORKSPACE: "training-terraform"
-  CONFIG_DIRECTORY: "./terraform/aws"
+  CONFIG_DIRECTORY: "./terraform/${{ inputs.name }}"
 
 jobs:
   terraform-plan:
