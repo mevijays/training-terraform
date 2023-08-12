@@ -10,7 +10,7 @@ env:
   TF_CLOUD_ORGANIZATION: "mevijays"
   TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
   TF_WORKSPACE: "training-terraform"
-  CONFIG_DIRECTORY: "./terraform/azure"
+  CONFIG_DIRECTORY: "./terraform/aws"
 
 jobs:
   terraform-plan:
