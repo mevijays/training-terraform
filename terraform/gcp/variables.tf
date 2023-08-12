@@ -24,5 +24,6 @@ variable "gcp_zone" {
 
 variable "gcp_project_id" {
   type        = string
+  default     = "mevijay-dev"
   description = "GCP project ID for all resources"
 }
