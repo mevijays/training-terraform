@@ -52,7 +52,7 @@ jobs:
 
   terraform-apply:
     name: "Terraform Apply"
-    runs-on: ubuntu-latest
+    runs-on: dind
   #  environment: deploy
     needs: terraform-plan
     steps:
