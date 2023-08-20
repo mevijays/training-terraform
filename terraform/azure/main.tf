@@ -18,7 +18,7 @@ provider "azurerm" {
     }
   }
 }
-/*
+
 variable "VMCOUNT" {
   default  = 2
   type     = number
@@ -167,4 +167,3 @@ resource "azurerm_linux_virtual_machine" "webvm" {
   data "template_file" "linux-vm-cloud-init" {
   template = file("azure-user-data.sh")
   }
-*/
