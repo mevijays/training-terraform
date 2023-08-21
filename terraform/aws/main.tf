@@ -16,7 +16,7 @@ provider "aws" {
   region = "us-east-1"
 }
 resource "random_pet" "sg" {}
-
+/*
 data "aws_ami" "ubuntu" {
   most_recent = true
 
@@ -68,3 +68,4 @@ resource "aws_security_group" "web-sg" {
 output "web-address" {
   value = "${aws_instance.web.public_dns}:8080"
 }
+*/
