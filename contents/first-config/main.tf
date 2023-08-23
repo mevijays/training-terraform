@@ -14,8 +14,6 @@ variable "sizeType" {
 
 provider "aws" {
   region     = "us-west-2"
-  access_key = "AKIA4TZXDTTMNE5DRV6G"
-  secret_key = "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"
 }
 
 resource "aws_instance" "app_server" {
