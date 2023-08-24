@@ -10,6 +10,7 @@
 |Language	    |English|
 |Expiration     |	2 years|
 |Total Exam questions| 57 |
+|Passing score | 70% i.e. atleast 40 correct answer out of 57 |
 
 
 # Exam objectives
