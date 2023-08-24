@@ -19,7 +19,7 @@ terraform {
 ### VCS use in cloud
 
 - terraform.tf
-```json
+```yaml
 terraform {
 
   cloud {
@@ -42,7 +42,7 @@ terraform {
 ```
 - Variable.tf
 
-```json
+```yaml
 variable "region" {
   description = "AWS region"
   default     = "us-west-1"
@@ -62,7 +62,7 @@ variable "instance_name" {
 
 - main.tf
 
-```json
+```yaml
 provider "aws" {
   region = var.region
 }
@@ -96,7 +96,7 @@ resource "aws_instance" "ubuntu" {
 
 - Output.tf
 
-```json
+```yaml
 output "instance_ami" {
   value = aws_instance.ubuntu.ami
 }
