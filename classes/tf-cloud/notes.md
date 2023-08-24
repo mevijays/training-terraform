@@ -1,22 +1,30 @@
 # Terraform cloud
 
-VCS use-  https://github.com/hashicorp/learn-terraform-cloud/blob/main/README.md
+```VCS use-```  https://github.com/hashicorp/learn-terraform-cloud/blob/main/README.md
 
 
-### use remote backend as TF cloud
+### Use remote backend as TF cloud
+- Make a signup here [Sign up terraform](https://app.terraform.io/public/signup/account)   ( Free terraform cloud account ).
+- Run command ``terraform login`` this command will redirect you to browser (no machine login available till terraform 1.5.5) for login. When you done with your login, you can close the browser and terraform login credentials will be stored here ``/<homedir>/.terraform.d/credentials.tfrc.json`` .
+- Now you can use bellow terraform ``cloud`` configuration in your terraform block.
+
 ```yaml
 terraform {
- backend "remote" {
-   hostname = "TFE_HOSTNAME"
-   organization = "ORG_NAME"
-   workspaces {
-     name = "WORKSPACE_NAME"
-   }
- }
-}
+  cloud {
+    organization = "organization-name"
+    workspaces {
+      name = "learn-terraform-cloud"
+    }
+  }
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.28.0"
+    }
+  }
 ```
 
-### VCS use in cloud
+### VCS use in cloud   
 
 - terraform.tf
 ```yaml
