@@ -46,6 +46,13 @@ Each input variable accepted by a module must be declared using a variable block
 variable "image_id" {
   type = string
 }
+variable "user_information" {
+  type = object({
+    name    = string
+    address = string
+  })
+  sensitive = true
+}
 
 variable "availability_zone_names" {
   type    = list(string)
