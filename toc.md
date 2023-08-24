@@ -9,6 +9,7 @@
 |Free retake    | not included|
 |Language	    |English|
 |Expiration     |	2 years|
+|Total Exam questions| 57 |
 
 
 # Exam objectives
