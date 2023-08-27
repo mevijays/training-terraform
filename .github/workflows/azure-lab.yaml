@@ -2,8 +2,8 @@ name: "Terraform cloud run"
 
 on:
   push:
-    branches:    
-      - main
+    paths:
+      - 'tf-cloud/azure/**'
 permissions:
   contents: read
   id-token: write
