@@ -207,7 +207,18 @@ resource "azurerm_storage_account" "main" {
     environment = "staging"
   }
 }
-
+variable "is_create_law" {
+  type = bool
+  default = false
+}
+resource "azurerm_log_analytics_workspace" "main" {
+count = var.is_create_law ? 1 : 0
+  name                = "linux-vmalaw"
+  location            = azurerm_resource_group.krlabrg.location
+  resource_group_name = azurerm_resource_group.krlabrg.name
+  sku                 = "PerGB2018"
+  retention_in_days   = 30
+}
 output "random_number" {
   value = random_string.main.result
 }
