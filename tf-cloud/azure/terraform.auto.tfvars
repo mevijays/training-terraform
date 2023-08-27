@@ -1,5 +1,4 @@
-VMCOUNT = 2
-is_create_str = true
-is_create_vnet = true
-is_create_law = true
+VMCOUNT = 0
+is_create_str = false
+is_create_law = false
 rg_name = "krlab2"
