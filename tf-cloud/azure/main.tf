@@ -44,10 +44,13 @@ variable "is_create_str" {
   type = bool
   default = false
 }
-
+variable "rg_name" {
+  type = string
+  defaudefault = "krlab"
+}
 # Create a resource group
 resource "azurerm_resource_group" "krlabrg" {
-  name     = "krlab"
+  name     = var.rg_name
   location = "eastus"
 }
 
