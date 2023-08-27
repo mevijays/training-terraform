@@ -101,7 +101,7 @@ resource "azurerm_network_security_group" "vmnsg" {
 }
 ## associate NSG with vm subnet
 resource "azurerm_subnet_network_security_group_association" "vmnetnsg" {
-  subnet_id                 = azurerm_subnet.vmsubnet[0].id
+  subnet_id                 = azurerm_subnet.vmsubnet.id
   network_security_group_id = azurerm_network_security_group.vmnsg.id
 }
 ### creating public ips
