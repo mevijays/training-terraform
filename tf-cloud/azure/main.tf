@@ -192,7 +192,7 @@ resource "azurerm_linux_virtual_machine" "webvm" {
   data "template_file" "linux-vm-cloud-init" {
   template = file("azure-user-data.sh")
   }
-
+/*
 resource "azurerm_storage_account" "main" {
   name                     = "krlabmonstrbatch"
   resource_group_name      = azurerm_resource_group.krlabrg.name
@@ -203,6 +203,7 @@ resource "azurerm_storage_account" "main" {
     environment = "staging"
   }
 }
+*/
 variable "is_create_law" {
   type = bool
   default = false
