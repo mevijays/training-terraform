@@ -23,7 +23,6 @@ variable "VMCOUNT" {
   default  = 2
   type     = number
 }
-/*
 # Create a resource group
 resource "azurerm_resource_group" "krlabrg" {
   name     = "krlab"
@@ -168,4 +167,3 @@ resource "azurerm_linux_virtual_machine" "webvm" {
   data "template_file" "linux-vm-cloud-init" {
   template = file("azure-user-data.sh")
   }
-*/
