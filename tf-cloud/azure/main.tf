@@ -46,7 +46,7 @@ variable "is_create_str" {
 }
 variable "is_create_rg" {
   type = bool
-  default = 
+  default = false
 }
 # Create a resource group
 resource "azurerm_resource_group" "krlabrg" {
