@@ -53,7 +53,6 @@ resource "azurerm_resource_group" "krlabrg" {
 
 # Create a virtual network within the resource group
 resource "azurerm_virtual_network" "labvnet" {
-  count = var.is_create_vnet ? 1 : 0
   name                = "labvnet"
   resource_group_name = azurerm_resource_group.krlabrg.name
   location            = azurerm_resource_group.krlabrg.location
@@ -65,10 +64,9 @@ resource "azurerm_virtual_network" "labvnet" {
 
 # Create a vm subnet 
 resource "azurerm_subnet" "vmsubnet" {
-  count = var.is_create_vnet ? 1 : 0
   name                 = "vmsubnet"
   resource_group_name  = azurerm_resource_group.krlabrg.name
-  virtual_network_name = azurerm_virtual_network.labvnet[0].name
+  virtual_network_name = azurerm_virtual_network.labvnet.name
   address_prefixes     = ["10.0.1.0/24"]
   depends_on          = [
     azurerm_resource_group.krlabrg,
@@ -78,7 +76,6 @@ resource "azurerm_subnet" "vmsubnet" {
 
 ## creating NSG with all inbound allow
 resource "azurerm_network_security_group" "vmnsg" {
-  count = var.is_create_vnet ? 1 : 0
   name                = "vmnsg"
   location            = azurerm_resource_group.krlabrg.location
   resource_group_name = azurerm_resource_group.krlabrg.name
@@ -101,9 +98,8 @@ resource "azurerm_network_security_group" "vmnsg" {
 }
 ## associate NSG with vm subnet
 resource "azurerm_subnet_network_security_group_association" "vmnetnsg" {
-  count = var.is_create_vnet ? 1 : 0
   subnet_id                 = azurerm_subnet.vmsubnet[0].id
-  network_security_group_id = azurerm_network_security_group.vmnsg[0].id
+  network_security_group_id = azurerm_network_security_group.vmnsg.id
 }
 ### creating public ips
 resource "azurerm_public_ip" "eip" {
@@ -121,10 +117,9 @@ resource "azurerm_public_ip" "eip" {
 
 # Create a dev subnet 
 resource "azurerm_subnet" "devsubnet" {
-  count = var.is_create_vnet ? 1 : 0
   name                 = "devsubnet"
   resource_group_name  = azurerm_resource_group.krlabrg.name
-  virtual_network_name = azurerm_virtual_network.labvnet[0].name
+  virtual_network_name = azurerm_virtual_network.labvnet.name
   address_prefixes     = ["10.0.2.0/24"]
   depends_on          = [
     azurerm_resource_group.krlabrg,
@@ -133,10 +128,9 @@ resource "azurerm_subnet" "devsubnet" {
 }
 # Create a prod vm subnet 
 resource "azurerm_subnet" "prodsubnet" {
-  count = var.is_create_vnet ? 1 : 0
   name                 = "prodsubnet"
   resource_group_name  = azurerm_resource_group.krlabrg.name
-  virtual_network_name = azurerm_virtual_network.labvnet[0].name
+  virtual_network_name = azurerm_virtual_network.labvnet.name
   address_prefixes     = ["10.0.3.0/24"]
   depends_on          = [
     azurerm_resource_group.krlabrg,
@@ -152,7 +146,7 @@ resource "azurerm_network_interface" "webvm" {
 
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = azurerm_subnet.vmsubnet[0].id
+    subnet_id                     = azurerm_subnet.vmsubnet.id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = element(azurerm_public_ip.eip.*.id, count.index) 
   }
@@ -197,8 +191,7 @@ resource "azurerm_linux_virtual_machine" "webvm" {
   }
 
 resource "azurerm_storage_account" "main" {
-  count = var.is_create_str ? 1 : 0
-  name                     = "krlabmonstr${random_string.main.result}"
+  name                     = "krlabmonstrbatch
   resource_group_name      = azurerm_resource_group.krlabrg.name
   location                 = azurerm_resource_group.krlabrg.location
   account_tier             = "Standard"
