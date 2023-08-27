@@ -25,25 +25,12 @@ provider "azurerm" {
 provider "random" {
 }
 
-resource "random_string" "main" {
-  length = 6
-  lower  = true
-upper = false
-special = false
-}
 
 variable "VMCOUNT" {
   default  = 1
   type     = number
 }
-variable "is_create_vnet" {
-  type = bool
-  default = false
-}
-variable "is_create_str" {
-  type = bool
-  default = false
-}
+
 variable "rg_name" {
   type = string
   default = "krlab"
@@ -215,7 +202,4 @@ count = var.is_create_law ? 1 : 0
   resource_group_name = azurerm_resource_group.krlabrg.name
   sku                 = "PerGB2018"
   retention_in_days   = 30
-}
-output "random_number" {
-  value = random_string.main.result
 }
