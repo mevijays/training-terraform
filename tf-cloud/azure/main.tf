@@ -4,6 +4,10 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "~> 3.44.1"
     }
+    random = {
+      source = "hashicorp/random"
+      version = "3.5.1"
+    }
   }
   cloud {
     workspaces {
@@ -18,19 +22,42 @@ provider "azurerm" {
     }
   }
 }
+provider "random" {
+}
+
+resource "random_string" "main" {
+  length = 6
+  lower  = true
+upper = false
+special = false
+}
 
 variable "VMCOUNT" {
-  default  = 2
+  default  = 1
   type     = number
+}
+variable "is_create_vnet" {
+  type = bool
+  default = false
+}
+variable "is_create_str" {
+  type = bool
+  default = false
+}
+variable "is_create_rg" {
+  type = bool
+  default = 
 }
 # Create a resource group
 resource "azurerm_resource_group" "krlabrg" {
+  count = var.is_create_rg ? 1: 0
   name     = "krlab"
   location = "eastus"
 }
 
 # Create a virtual network within the resource group
 resource "azurerm_virtual_network" "labvnet" {
+  count = var.is_create_vnet ? 1 : 0
   name                = "labvnet"
   resource_group_name = azurerm_resource_group.krlabrg.name
   location            = azurerm_resource_group.krlabrg.location
@@ -42,6 +69,7 @@ resource "azurerm_virtual_network" "labvnet" {
 
 # Create a vm subnet 
 resource "azurerm_subnet" "vmsubnet" {
+  count = var.is_create_vnet ? 1 : 0
   name                 = "vmsubnet"
   resource_group_name  = azurerm_resource_group.krlabrg.name
   virtual_network_name = azurerm_virtual_network.labvnet.name
@@ -54,6 +82,7 @@ resource "azurerm_subnet" "vmsubnet" {
 
 ## creating NSG with all inbound allow
 resource "azurerm_network_security_group" "vmnsg" {
+  count = var.is_create_vnet ? 1 : 0
   name                = "vmnsg"
   location            = azurerm_resource_group.krlabrg.location
   resource_group_name = azurerm_resource_group.krlabrg.name
@@ -76,6 +105,7 @@ resource "azurerm_network_security_group" "vmnsg" {
 }
 ## associate NSG with vm subnet
 resource "azurerm_subnet_network_security_group_association" "vmnetnsg" {
+  count = var.is_create_vnet ? 1 : 0
   subnet_id                 = azurerm_subnet.vmsubnet.id
   network_security_group_id = azurerm_network_security_group.vmnsg.id
 }
@@ -95,6 +125,7 @@ resource "azurerm_public_ip" "eip" {
 
 # Create a dev subnet 
 resource "azurerm_subnet" "devsubnet" {
+  count = var.is_create_vnet ? 1 : 0
   name                 = "devsubnet"
   resource_group_name  = azurerm_resource_group.krlabrg.name
   virtual_network_name = azurerm_virtual_network.labvnet.name
@@ -106,6 +137,7 @@ resource "azurerm_subnet" "devsubnet" {
 }
 # Create a prod vm subnet 
 resource "azurerm_subnet" "prodsubnet" {
+  count = var.is_create_vnet ? 1 : 0
   name                 = "prodsubnet"
   resource_group_name  = azurerm_resource_group.krlabrg.name
   virtual_network_name = azurerm_virtual_network.labvnet.name
@@ -167,3 +199,19 @@ resource "azurerm_linux_virtual_machine" "webvm" {
   data "template_file" "linux-vm-cloud-init" {
   template = file("azure-user-data.sh")
   }
+
+resource "azurerm_storage_account" "main" {
+  count = var.is_create_str ? 1 : 0
+  name                     = "krlabmonstr${random_string.main.result}"
+  resource_group_name      = azurerm_resource_group.krlabrg.name
+  location                 = azurerm_resource_group.krlabrg.location
+  account_tier             = "Standard"
+  account_replication_type = "GRS"
+  tags = {
+    environment = "staging"
+  }
+}
+
+output "random_number" {
+  value = random_string.main.result
+}
