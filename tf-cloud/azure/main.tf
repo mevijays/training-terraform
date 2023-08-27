@@ -194,7 +194,7 @@ resource "azurerm_linux_virtual_machine" "webvm" {
   }
 
 resource "azurerm_storage_account" "main" {
-  name                     = "krlabmonstrbatch
+  name                     = "krlabmonstrbatch"
   resource_group_name      = azurerm_resource_group.krlabrg.name
   location                 = azurerm_resource_group.krlabrg.location
   account_tier             = "Standard"
