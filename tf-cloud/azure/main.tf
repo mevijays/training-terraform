@@ -44,13 +44,9 @@ variable "is_create_str" {
   type = bool
   default = false
 }
-variable "is_create_rg" {
-  type = bool
-  default = false
-}
+
 # Create a resource group
 resource "azurerm_resource_group" "krlabrg" {
-  count = var.is_create_rg ? 1: 0
   name     = "krlab"
   location = "eastus"
 }
