@@ -103,7 +103,7 @@ resource "azurerm_network_security_group" "vmnsg" {
 resource "azurerm_subnet_network_security_group_association" "vmnetnsg" {
   count = var.is_create_vnet ? 1 : 0
   subnet_id                 = azurerm_subnet.vmsubnet[0].id
-  network_security_group_id = azurerm_network_security_group.vmnsg.id
+  network_security_group_id = azurerm_network_security_group.vmnsg[0].id
 }
 ### creating public ips
 resource "azurerm_public_ip" "eip" {
@@ -152,7 +152,7 @@ resource "azurerm_network_interface" "webvm" {
 
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = azurerm_subnet.vmsubnet.id
+    subnet_id                     = azurerm_subnet.vmsubnet[0].id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = element(azurerm_public_ip.eip.*.id, count.index) 
   }
