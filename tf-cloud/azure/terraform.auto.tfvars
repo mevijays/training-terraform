@@ -1,3 +1,3 @@
-VMCOUNT = 2
-is_create_law = true
+VMCOUNT = 0
+is_create_law = false
 rg_name = "krlab"
