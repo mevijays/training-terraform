@@ -4,12 +4,9 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "~> 3.44.1"
     }
-    random = {
-      source = "hashicorp/random"
-      version = "3.5.1"
-    }
   }
   cloud {
+    organization = "mevijays"
     workspaces {
       name = "training-terraform"
     }
@@ -22,9 +19,6 @@ provider "azurerm" {
     }
   }
 }
-provider "random" {
-}
-
 
 variable "VMCOUNT" {
   default  = 1
@@ -164,7 +158,7 @@ resource "azurerm_linux_virtual_machine" "webvm" {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
-  custom_data    = base64encode(data.template_file.linux-vm-cloud-init.rendered)
+  custom_data    = base64encode(local.custom_data)
   source_image_reference {
     publisher = "OpenLogic"
     offer     = "CentOS"
@@ -176,8 +170,8 @@ resource "azurerm_linux_virtual_machine" "webvm" {
         azurerm_network_interface.webvm
  ]
 }
-  data "template_file" "linux-vm-cloud-init" {
-  template = file("azure-user-data.sh")
+locals {
+  custom_data = file("azure-user-data.sh")
   }
 /*
 resource "azurerm_storage_account" "main" {
