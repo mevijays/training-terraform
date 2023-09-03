@@ -5,7 +5,8 @@ terraform {
       version = "~> 4.50.0"
     }
   }
-  cloud {
+   cloud {
+    organization = "mevijays"
     workspaces {
       name = "training-terraform"
     }

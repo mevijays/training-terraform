@@ -19,7 +19,7 @@ provider "azurerm" {
     }
   }
 }
-
+/*
 variable "VMCOUNT" {
   default  = 1
   type     = number
@@ -173,7 +173,7 @@ resource "azurerm_linux_virtual_machine" "webvm" {
 locals {
   custom_data = file("azure-user-data.sh")
   }
-/*
+
 resource "azurerm_storage_account" "main" {
   name                     = "krlabmonstrbatch"
   resource_group_name      = azurerm_resource_group.krlabrg.name
@@ -184,7 +184,7 @@ resource "azurerm_storage_account" "main" {
     environment = "staging"
   }
 }
-*/
+
 variable "is_create_law" {
   type = bool
   default = false
@@ -197,3 +197,4 @@ count = var.is_create_law ? 1 : 0
   sku                 = "PerGB2018"
   retention_in_days   = 30
 }
+*/

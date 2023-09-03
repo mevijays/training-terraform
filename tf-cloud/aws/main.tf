@@ -8,6 +8,12 @@ terraform {
       source  = "hashicorp/random"
       version = "3.4.3"
     }
+   }
+  cloud {
+    organization = "mevijays"
+    workspaces {
+      name = "training-terraform"
+    }
   }
   required_version = ">= 1.1.0"
 }
@@ -15,8 +21,7 @@ terraform {
 provider "aws" {
   region = "us-east-1"
 }
-resource "random_pet" "sg" {}
-/*
+
 data "aws_ami" "ubuntu" {
   most_recent = true
 
@@ -49,7 +54,7 @@ resource "aws_instance" "web" {
 }
 
 resource "aws_security_group" "web-sg" {
-  name = "${random_pet.sg.id}-sg"
+  name = "web-sg"
   ingress {
     from_port   = 8080
     to_port     = 8080
@@ -68,4 +73,4 @@ resource "aws_security_group" "web-sg" {
 output "web-address" {
   value = "${aws_instance.web.public_dns}:8080"
 }
-*/
+

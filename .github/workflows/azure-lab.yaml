@@ -1,4 +1,4 @@
-name: "Terraform cloud run"
+name: "Terraform cloud run-Azure"
 
 on:
   push:
