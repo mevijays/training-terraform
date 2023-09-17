@@ -1,77 +1,71 @@
 terraform {
   required_providers {
+    local = {
+      source = "hashicorp/local"
+      version = "2.4.0"
+    }
     aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
+      source = "hashicorp/aws"
+      version = "5.16.1"
     }
   }
 }
-locals {
-  instance_size   = "t2.micro"
-  provider_region = "us-east-2"
-  tag_name        = "myvm"
-  image_ami_id    = "ami-05d251e0fc338590c"
-}
 
+provider "local" {
+  # Configuration options
+}
 provider "aws" {
-  region = local.provider_region
+  region = "us-west-2"
+}
+provider "aws" {
+  region = "us-east-1"
+  alias = "east1"
 }
 
-data "aws_vpc" "vpc" {
+
+
+locals {
+  names = {
+    	fileone = "today is rainy"
+	    filetwo = "my class is terraform"
+  }
+}
+
+resource "local_file" "main" {
+  for_each = local.names
+  content = "Hello ${each.value}"
+  filename = "${path.module}/${each.key}.txt"
+}
+data "aws_vpc" "main" {
   default = true
 }
-data "aws_subnets" "example" {
+data "aws_subnets" "main" {
   filter {
     name   = "vpc-id"
-    values = [data.aws_vpc.vpc.id]
+    values = [data.aws_vpc.main.id]
   }
 }
-
-// Example 1
-resource "aws_instance" "app_server" {
-  for_each      = toset(data.aws_subnets.example.ids)
-  ami           = local.image_ami_id
-  instance_type = local.instance_size
-  subnet_id     = each.key
+data "aws_ami" "ubuntu" {
+  most_recent = true
+  owners      = ["099720109477"]
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+  }
+}
+locals {
+  db = {
+    subnet-04d3157deec1bc4a1 = "us-west-2c"
+    subnet-01fc4064c06fdd7da = "us-west-2a"
+  }
+}
+resource "aws_instance" "main" {
+  for_each = local.db
+  instance_type = "t2.micro"
+  ami = data.aws_ami.ubuntu.id
+  subnet_id = each.key
+  availability_zone = each.value
   tags = {
-    Name = local.tag_name
+    Name = "Server ${each.key}"
   }
-}
-
-
-
-//---bellow is variable type list of object but with for_each it does not support. instead it works with dynamic block.
-/*
-variable "subnetobject" {
-  type = list(object({
-    CIDR = string
-    AZ = string 
-  }))
-  default = [ {
-    CIDR = "10.0.4.0/24"
-    AZ = "us-east-2a"
-  },
-  {
-    CIDR = "10.0.5.0/24"
-    AZ = "us-east-2b"
-  } ]
-}
-*/
-
-//Example 2
-
-variable "subnets" {
-  type = map(string)
-  default = {
-    "us-east-2a" = "10.0.1.0/24"
-    "us-east-2b" = "10.0.2.0/24"
-    "us-east-2c" = "10.0.3.0/24"
-  }
-}
-
-resource "aws_subnet" "example" {
-  for_each          = var.subnets
-  vpc_id            = data.aws_vpc.vpc.id
-  cidr_block        = each.value
-  availability_zone = each.key
 }
