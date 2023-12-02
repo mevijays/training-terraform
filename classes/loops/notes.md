@@ -213,7 +213,7 @@ Terraform provides the dynamic block to create repeatable nested blocks within a
 
 ### Simple resource creation with for_each
 
-```yaml
+```hcl
 # VPC variable
 variable “vpc-cidr” {
     default = “10.0.0.0/16”}
@@ -235,7 +235,7 @@ resource “aws_subnet” “main-subnet” {
 
 ### Dynamic block Security rules
 
-```yaml
+```hcl
 locals {
 	inbound_ports = [80, 443]
 	outbound_ports = [443, 1433]
@@ -268,7 +268,7 @@ resource “aws_security_group” “sg-webserver” {
 
 ### How to use Terraform dynamic blocks with lists
 
-```yaml
+```hcl
 locals {
 	db_instance = “10.0.32.50/32”
 	inbound_ports = [80, 443]
