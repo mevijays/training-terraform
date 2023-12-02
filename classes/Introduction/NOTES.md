@@ -155,6 +155,108 @@ The [Terraform Registry](https://registry.terraform.io/) is the main directory o
 
 ### provider configurations
 
+## Providers example (all 3 major cloud)
+### AWS
+```
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}
+variable "secret_key" {
+}
+/*
+// environment variable way
+sh-
+% export AWS_ACCESS_KEY_ID="anaccesskey"
+% export AWS_SECRET_ACCESS_KEY="asecretkey"
+powershell-
+$env:AWS_ACCESS_KEY_ID="anaccesskey"
+$env:AWS_SECRET_ACCESS_KEY="asecretkey"
+*/
+provider "aws" {
+  region = "us-east-1"
+/*
+secret option
+access_key = "my-access-key"
+secret_key = var.secret_key 
+*/
+}
+
+resource "aws_vpc" "this" {
+  cidr_block = "192.168.0.0/22"
+}
+```
+### Azure
+```
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "=3.0.0"
+    }
+  }
+}
+variable "client_secret" {
+}
+//Authentication option as environment variables.
+/*
+# sh
+export ARM_CLIENT_ID="00000000-0000-0000-0000-000000000000"
+export ARM_CLIENT_SECRET="12345678-0000-0000-0000-000000000000"
+export ARM_TENANT_ID="10000000-0000-0000-0000-000000000000"
+export ARM_SUBSCRIPTION_ID="20000000-0000-0000-0000-000000000000"
+# PowerShell
+> $env:ARM_CLIENT_ID = "00000000-0000-0000-0000-000000000000"
+> $env:ARM_CLIENT_SECRET = "12345678-0000-0000-0000-000000000000"
+> $env:ARM_TENANT_ID = "10000000-0000-0000-0000-000000000000"
+> $env:ARM_SUBSCRIPTION_ID = "20000000-0000-0000-0000-000000000000"
+*/
+provider "azurerm" {
+  features {}
+/*
+  client_id       = "00000000-0000-0000-0000-000000000000"
+  client_secret   = var.client_secret
+  tenant_id       = "10000000-0000-0000-0000-000000000000"
+  subscription_id = "20000000-0000-0000-0000-000000000000"
+*/
+}
+
+resource "azurerm_resource_group" "this" {
+  name     = "krlabrg"
+  location = "West Europe"
+}
+```
+### GCP
+```
+terraform {
+  required_providers {
+    google = {
+      source = "hashicorp/google"
+      version = "5.7.0"
+    }
+  }
+}
+/*
+Environment variable way
+export GOOGLE_APPLICATION_CREDENTIALS=key.json
+*/
+provider "google" {
+  project     = "my-project-id"
+  region      = "us-central1"
+  zone        = "us-central1-c"
+}
+
+resource "google_compute_network" "vpc_network" {
+  name                    = "terraform-network"
+  auto_create_subnetworks = "true"
+}
+```
+
+
 ```bash
 provider "google" {
   project = "acme-app"
