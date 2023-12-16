@@ -37,3 +37,18 @@ resource "aws_subnet" "private" {
     Name = "${local.tags[count.index]}-subnet"
   }
 }
+/*
+resource "aws_subnet" "name" {
+  for_each = toset(data.aws_availability_zones.main.names)
+  vpc_id = aws_vpc.main.id
+  cidr_block = cidrsubnet(aws_vpc.main.cidr_block, 2, index(data.aws_availability_zones.main.names, each.key))
+  availability_zone = each.key
+}
+
+resource "aws_subnet" "main" {
+  count =  length(data.aws_availability_zones.main.names)
+  vpc_id = aws_vpc.main.id
+  cidr_block = cidrsubnet(aws_vpc.main.cidr_block, 2, count.index)
+  availability_zone = data.aws_availability_zones.main.names[count.index]
+}
+*/
