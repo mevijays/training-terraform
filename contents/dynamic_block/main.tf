@@ -1,3 +1,41 @@
+terraform {
+  required_version = "~> 1.6.4" // the terraform binary version which can execute these configuration tf files
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.29.0"
+    }
+  }
+
+  cloud {
+    organization = "krlab"
+
+    workspaces {
+      name = "aws-ws"
+    }
+  }
+}
+
+locals {
+  my_region = "us-east-2"
+  ports = [80,22]
+  map_ports = {
+         ssh = {
+            f_port = 22
+            protocol = "tcp"
+            cidr_block = ["0.0.0.0/0"]
+         }
+          mysql = {
+            f_port = 3306
+            protocol = "tcp"
+            cidr_block = ["192.168.1.0/24"]
+         }
+  }
+}
+provider "aws" {
+  region = local.my_region
+}
+
 data "aws_vpc" "this" {
   default = true
 }
@@ -20,21 +58,7 @@ resource "aws_key_pair" "main" {
   key_name   = "awskey"
   public_key = file("./aws-key.pub")
 }
-locals {
-  ports = [80,22]
-  map_ports = {
-         ssh = {
-            f_port = 22
-            protocol = "tcp"
-            cidr_block = ["0.0.0.0/0"]
-         }
-          mysql = {
-            f_port = 3306
-            protocol = "tcp"
-            cidr_block = ["192.168.1.0/24"]
-         }
-  }
-}
+
 resource "aws_security_group" "main" {
   name = "mysg"
   vpc_id = data.aws_vpc.this.id
