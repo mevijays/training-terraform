@@ -1,0 +1,94 @@
+trigger:
+  branches:
+    include:
+      - "main"
+parameters:
+- name: destroy
+  default: false
+  type: boolean
+jobs:
+  - job: tfvalidate
+    displayName: 'Terraform validate'
+    pool: 
+      vmImage: 'ubuntu-latest'
+    steps:
+      - task: TerraformInstaller@1
+        inputs:
+          terraformVersion: 'latest'
+      - task: TerraformTaskV4@4
+        inputs:
+          provider: 'azurerm'
+          command: 'init'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/dev'
+          backendServiceArm: 'yourconnector'
+          backendAzureRmResourceGroupName: 'state'
+          backendAzureRmStorageAccountName: 'vodaazstate'
+          backendAzureRmContainerName: 'secret'
+          backendAzureRmKey: 'terraformtfstate.tfstate'
+        displayName: 'Terraform init'
+      - task: TerraformTaskV4@4
+        inputs:
+          provider: 'azurerm'
+          command: 'plan'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/dev'
+          environmentServiceNameAzureRM: 'yourconnector'
+        displayName: Terraform plan
+
+  - job: tfapply
+    condition: and(succeeded(), eq('${{ parameters.destroy }}', 'false'))
+    dependsOn: 'tfvalidate'
+    displayName: 'Terraform apply'
+    pool: 
+      vmImage: 'ubuntu-latest'
+    steps:
+      - task: TerraformInstaller@1
+        inputs:
+          terraformVersion: 'latest'
+      - task: TerraformTaskV4@4
+        inputs:
+          provider: 'azurerm'
+          command: 'init'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/dev'
+          backendServiceArm: 'yourconnector'
+          backendAzureRmResourceGroupName: 'state'
+          backendAzureRmStorageAccountName: 'vodaazstate'
+          backendAzureRmContainerName: 'secret'
+          backendAzureRmKey: 'terraformtfstate.tfstate'
+        displayName: 'Terraform init'
+      - task: TerraformTaskV4@4
+        inputs:
+          provider: 'azurerm'
+          command: 'apply'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/dev'
+          environmentServiceNameAzureRM: 'yourconnector'
+        displayName: Terraform apply
+                
+  - job: tfdestroy
+    dependsOn: 'tfvalidate'
+    condition: and(succeeded(), eq('${{ parameters.destroy }}', 'true'))
+    displayName: 'Terraform destroy'
+    pool: 
+      vmImage: 'ubuntu-latest'
+    steps:
+      - task: TerraformInstaller@1
+        inputs:
+          terraformVersion: 'latest'
+      - task: TerraformTaskV4@4
+        inputs:
+          provider: 'azurerm'
+          command: 'init'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/dev'
+          backendServiceArm: 'yourconnector'
+          backendAzureRmResourceGroupName: 'state'
+          backendAzureRmStorageAccountName: 'vodaazstate'
+          backendAzureRmContainerName: 'secret'
+          backendAzureRmKey: 'terraformtfstate.tfstate'
+        displayName: 'Terraform init'
+      - task: TerraformTaskV4@4
+        inputs:
+          provider: 'azurerm'
+          command: 'destroy'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/dev'
+          environmentServiceNameAzureRM: 'yourconnector'
+        displayName: Terraform Destroy
+        
