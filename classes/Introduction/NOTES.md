@@ -49,6 +49,7 @@ Windows 11 powershell winget install.
 ```powershell
  winget install Hashicorp.Terraform
  ```
+If winget is not working then download the exe binary and add binary in path same like given [here](https://learn.microsoft.com/en-us/azure/developer/terraform/get-started-windows-bash?tabs=bash) 
  - **Linux:**  
  Any linux binary install way ..    
  Check for the latest release version [here](https://github.com/hashicorp/terraform/releases)
