@@ -1,16 +1,13 @@
-resource "helm_release" "nginx_ingress" {
-  name             = "nginx-ingress"
-  namespace        = "ingress-nginx"
-  create_namespace = true
-  depends_on = [
-    aws_eks_cluster.aws_eks,
-    aws_eks_node_group.node
-  ]
-  repository = "https://kubernetes.github.io/ingress-nginx"
-  chart      = "ingress-nginx"
-  values = [
-    file("charts/ingress-nginx/values.yaml"),
-  ]
+resource "null_resource" "download_yaml" {
+  triggers {
+    type  = "always"
+  }
+  provisioner "local-exec" {
+    command = "curl -o deploy.yaml https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.1/deploy/static/provider/aws/deploy.yaml"
+  }
+}
+resource "kubernetes_manifest" "deployment" {
+  manifest = filebase64sha256("deploy.yaml")
 }
 resource "helm_release" "metrics_server" {
   name       = "metrics-server"
@@ -165,51 +162,7 @@ resource "helm_release" "cert_manager" {
   create_namespace = true
   repository       = "https://charts.jetstack.io"
   chart            = "cert-manager"
-  version          = "v1.3.1"
-  set {
-    name  = "installCRDs"
-    value = "true"
-  }
-}
-resource "helm_release" "datadog" {
-  name             = "datadog"
-  namespace        = "datadog"
-  create_namespace = true
-  depends_on = [
-    aws_eks_cluster.aws_eks,
-    aws_eks_node_group.node
-  ]
-  repository = "https://helm.datadoghq.com"
-  chart      = "datadog"
-  set {
-    name  = "datadog.apiKey"
-    value = var.datadogKey
-  }
-  values = [
-    file("charts/datadog/datadog-values.yaml"),
-  ]
+  version          = "v1.14.5"
 }
 
-resource "helm_release" "k8sPolicyCRDs" {
-  name             = "kyverno-crds"
-  namespace        = "kyverno"
-  create_namespace = true
-  depends_on = [
-    aws_eks_cluster.aws_eks,
-    aws_eks_node_group.node
-  ]
-  repository = "https://kyverno.github.io/kyverno"
-  chart      = "kyverno-crds"
-}
 
-resource "helm_release" "k8sPolicy" {
-  name      = "kyverno"
-  namespace = "kyverno"
-  depends_on = [
-    aws_eks_cluster.aws_eks,
-    aws_eks_node_group.node,
-    helm_release.k8sPolicyCRDs
-  ]
-  repository = "https://kyverno.github.io/kyverno"
-  chart      = "kyverno"
-}
