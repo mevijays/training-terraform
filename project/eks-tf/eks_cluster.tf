@@ -92,9 +92,9 @@ resource "aws_eks_node_group" "node" {
   instance_types  = var.node_size
 
   scaling_config {
-    desired_size = 3
-    max_size     = 9
-    min_size     = 3
+    desired_size = 2
+    max_size     = 5
+    min_size     = 1
   }
 
   depends_on = [
