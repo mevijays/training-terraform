@@ -1,0 +1,40 @@
+image: 
+    name: hashicorp/terraform:latest
+    entrypoint: [""]
+stages:
+  - validate
+  - plan
+  - apply
+
+variables:
+  TF_VAR_region: us-west-2  # Replace with your desired region
+  TF_VAR_AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+  TF_VAR_AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+  TF_HTTP_PASSWORD: $PAT
+  TF_HTTP_USERNAME: "<your gitlab login id>"
+  TF_HTTP_ADDRESS: "https://gitlab.com/api/v4/projects/<projectid>/terraform/state/default"
+
+validate:
+  stage: validate
+  script:
+    - terraform init
+    - terraform validate
+plan:
+  stage: plan
+  script:
+    - terraform init
+    - terraform plan -out=tfplan
+  artifacts:
+    paths:
+      - tfplan
+
+apply:
+  stage: apply
+  script:
+    - terraform init
+    - terraform apply -input=false tfplan
+  dependencies:
+    - plan
+  when: manual
+  only:
+    - main  # Or your desired branch
