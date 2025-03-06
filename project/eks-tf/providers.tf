@@ -13,12 +13,10 @@ terraform {
       version = "2.13.2"
     }
   }
-  cloud {
-    organization = "KRLABORG"
-
-    workspaces {
-      name = "cliws"
-    }
+  backend "s3" {
+    bucket = "kr-tfstate-bucket"  # Replace with your bucket name
+    key    = "state/terraform.tfstate"
+    region = "us-east-1"
   }
 }
 provider "aws" {
