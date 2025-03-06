@@ -1,0 +1,55 @@
+name: terraform run aws
+on:
+  workflow_dispatch:
+    inputs:
+      destroy:
+        description: 'Check to destroy resources'
+        required: true
+        default: 'false'
+        type: boolean  # This will create a checkbox in the UI
+      workspace:
+        description: terraform workspace dir
+        default: tf-workspace
+        type: choice
+        options:
+          - 'tf-workspace'
+          - 'project/eks-tf'
+env:
+  AWS_REGION : "us-east-1"
+permissions:
+      id-token: write   # This is required for requesting the JWT
+      contents: read    # This is required for actions/checkout
+jobs:
+  my_job:
+    name: terraform run
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ github.event.inputs.workspace }}
+    steps:
+      - name: Git clone the repository
+        uses: actions/checkout@v3
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4.1.0
+        with:
+          role-to-assume: arn:aws:iam::867162103000:role/githubactions #change to reflect your IAM role’s ARN
+          aws-region: ${{ env.AWS_REGION }}
+          
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan
+
+      - name: Terraform Apply
+        run: |
+          if [ "${{ github.event.inputs.destroy }}" == "true" ]; then
+            echo "Destroying resources..."
+            terraform apply -auto-approve -destroy
+          else
+            echo "Applying changes..."
+            terraform apply -auto-approve
+          fi
