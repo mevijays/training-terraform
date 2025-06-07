@@ -55,8 +55,8 @@ If winget is not working then download the exe binary and add binary in path sam
  Check for the latest release version [here](https://github.com/hashicorp/terraform/releases)
 
  ```bash
- wget https://releases.hashicorp.com/terraform/1.5.5/terraform_1.5.5_linux_amd64.zip
- unzip terraform_1.5.5_linux_amd64.zip
+ wget https://releases.hashicorp.com/terraform/1.12.1/terraform_1.12.1_linux_amd64.zip
+ unzip terraform_1.12.1_linux_amd64.zip
  sudo chmod +x terraform
  sudo mv terraform /usr/local/bin/
  ```
