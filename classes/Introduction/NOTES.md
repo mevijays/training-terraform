@@ -394,7 +394,10 @@ resource "azurerm_virtual_network" "main" {
 
 
 
-
+## CLI SDK install
+- **AWS**  [Link](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+- **AZURE** [Link](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
+- **GCP** [Link](https://cloud.google.com/sdk/docs/install)
 
 
 
