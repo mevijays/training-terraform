@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     environment {
-        TF_TOKEN_app_terraform_io = credentials('terraform-cloud-token')
+        TF_TOKEN_app_terraform_io = credentials('terraform-cloud-token') # only require when state is in TFE. If TFE is not been used , this variable is not required.
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
     }
