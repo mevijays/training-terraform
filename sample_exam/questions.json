@@ -1,0 +1,837 @@
+{
+  "title": "Terraform Associate (004) — Practice Exam",
+  "passingScore": 70,
+  "questions": [
+    {
+      "id": "Q1",
+      "domain": "IaC Concepts",
+      "type": "single",
+      "stem": "Which of the following is NOT a benefit of Infrastructure as Code?",
+      "options": [
+        { "id": "A", "text": "Repeatable provisioning across environments" },
+        { "id": "B", "text": "Version-controlled history of infrastructure changes" },
+        { "id": "C", "text": "Automatic patching of operating systems on running VMs" },
+        { "id": "D", "text": "Code review of infrastructure changes via pull requests" }
+      ],
+      "correct": ["C"],
+      "explanation": "IaC describes desired infrastructure state; it doesn't manage in-place patching of running guest OSes — that's a configuration-management or patch-management concern (Ansible, Chef, Azure Update Manager). A, B, and D are classic IaC benefits."
+    },
+    {
+      "id": "Q2",
+      "domain": "IaC Concepts",
+      "type": "single",
+      "stem": "Terraform is best described as which type of tool?",
+      "options": [
+        { "id": "A", "text": "Imperative configuration-management tool" },
+        { "id": "B", "text": "Declarative infrastructure-provisioning tool" },
+        { "id": "C", "text": "Runtime container orchestrator" },
+        { "id": "D", "text": "Continuous-integration build agent" }
+      ],
+      "correct": ["B"],
+      "explanation": "Terraform is declarative — you describe desired state and Terraform figures out the API calls. It's provisioning, not configuration management, and it's not an orchestrator or CI runner."
+    },
+    {
+      "id": "Q3",
+      "domain": "IaC Concepts",
+      "type": "truefalse",
+      "stem": "Terraform can only manage resources in a single cloud provider per configuration.",
+      "options": [
+        { "id": "True", "text": "True" },
+        { "id": "False", "text": "False" }
+      ],
+      "correct": ["False"],
+      "explanation": "A single root module can declare multiple providers (aws, azurerm, google, github, etc.). Multi-cloud and multi-provider configurations are a core selling point."
+    },
+    {
+      "id": "Q4",
+      "domain": "Providers",
+      "type": "single",
+      "stem": "Where does Terraform download provider binaries to by default?",
+      "options": [
+        { "id": "A", "text": "$HOME/.terraform.d/plugins" },
+        { "id": "B", "text": "./.terraform/providers/" },
+        { "id": "C", "text": "/var/lib/terraform/plugins" },
+        { "id": "D", "text": "The system PATH" }
+      ],
+      "correct": ["B"],
+      "explanation": "After `terraform init`, providers are downloaded into the current working directory's `.terraform/providers/` folder, then locked to specific versions in `.terraform.lock.hcl`."
+    },
+    {
+      "id": "Q5",
+      "domain": "Providers",
+      "type": "single",
+      "stem": "Which version constraint matches `~> 4.10`?",
+      "options": [
+        { "id": "A", "text": "Exactly 4.10.0" },
+        { "id": "B", "text": "Any version >= 4.10 and < 5.0" },
+        { "id": "C", "text": "Any version >= 4.10.0 and < 4.11.0" },
+        { "id": "D", "text": "Any version greater than or equal to 4.10" }
+      ],
+      "correct": ["B"],
+      "explanation": "The pessimistic constraint `~> 4.10` (without a patch component) allows the rightmost specified component to increment. With a third component like `~> 4.10.5`, only patch can grow."
+    },
+    {
+      "id": "Q6",
+      "domain": "Providers",
+      "type": "single",
+      "stem": "You need two AWS provider instances — one in us-east-1, one in us-west-2. What feature enables this?",
+      "options": [
+        { "id": "A", "text": "Workspaces" },
+        { "id": "B", "text": "Provider `alias`" },
+        { "id": "C", "text": "Multiple `terraform { }` blocks" },
+        { "id": "D", "text": "Two separate state files" }
+      ],
+      "correct": ["B"],
+      "explanation": "Provider `alias` lets you declare multiple instances of the same provider with different config. Resources then opt in with `provider = aws.west`."
+    },
+    {
+      "id": "Q7",
+      "domain": "Providers",
+      "type": "single",
+      "stem": "What is the purpose of `.terraform.lock.hcl`?",
+      "options": [
+        { "id": "A", "text": "To prevent two engineers from applying at the same time" },
+        { "id": "B", "text": "To record exact provider versions and checksums for reproducible runs" },
+        { "id": "C", "text": "To store backend credentials securely" },
+        { "id": "D", "text": "To lock the state file during apply" }
+      ],
+      "correct": ["B"],
+      "explanation": "The lock file pins provider versions and records checksums. Commit it. State locking is a backend concern; credentials never go in the lock file."
+    },
+    {
+      "id": "Q8",
+      "domain": "Providers",
+      "type": "multi",
+      "stem": "Which are valid provider source addresses? (Choose two.)",
+      "options": [
+        { "id": "A", "text": "hashicorp/aws" },
+        { "id": "B", "text": "registry.terraform.io/hashicorp/aws" },
+        { "id": "C", "text": "aws-provider:5.80.0" },
+        { "id": "D", "text": "azure/azurerm@latest" }
+      ],
+      "correct": ["A", "B"],
+      "explanation": "A is the short form (assumes `registry.terraform.io`), B is the fully qualified form. C and D use invalid syntax."
+    },
+    {
+      "id": "Q9",
+      "domain": "Providers",
+      "type": "single",
+      "stem": "Which command upgrades providers to the latest versions allowed by your constraints?",
+      "options": [
+        { "id": "A", "text": "terraform init -upgrade" },
+        { "id": "B", "text": "terraform plan -upgrade" },
+        { "id": "C", "text": "terraform providers update" },
+        { "id": "D", "text": "terraform get" }
+      ],
+      "correct": ["A"],
+      "explanation": "`-upgrade` tells `init` to ignore the lock file and bring providers/modules up to the highest version allowed by `required_providers`. The lock file is then rewritten."
+    },
+    {
+      "id": "Q10",
+      "domain": "Providers",
+      "type": "truefalse",
+      "stem": "Terraform core itself contains the logic to call AWS, Azure, and GCP APIs.",
+      "options": [
+        { "id": "True", "text": "True" },
+        { "id": "False", "text": "False" }
+      ],
+      "correct": ["False"],
+      "explanation": "Terraform core is provider-agnostic. Cloud-specific logic lives in providers, which run as separate processes and communicate with core over gRPC."
+    },
+    {
+      "id": "Q11",
+      "domain": "Core Workflow",
+      "type": "single",
+      "stem": "Which command does NOT need cloud credentials to run successfully?",
+      "options": [
+        { "id": "A", "text": "terraform plan" },
+        { "id": "B", "text": "terraform validate" },
+        { "id": "C", "text": "terraform apply" },
+        { "id": "D", "text": "terraform destroy" }
+      ],
+      "correct": ["B"],
+      "explanation": "`validate` checks syntax and internal consistency — purely local. `plan`/`apply`/`destroy` typically refresh against the cloud and need credentials."
+    },
+    {
+      "id": "Q12",
+      "domain": "Core Workflow",
+      "type": "single",
+      "stem": "What is the correct order of the core Terraform workflow?",
+      "options": [
+        { "id": "A", "text": "plan → init → apply" },
+        { "id": "B", "text": "validate → init → plan → apply" },
+        { "id": "C", "text": "init → plan → apply" },
+        { "id": "D", "text": "apply → plan → init" }
+      ],
+      "correct": ["C"],
+      "explanation": "`init` downloads providers and prepares the backend, `plan` computes the diff, `apply` executes it. `validate` is optional but typically between `init` and `plan`."
+    },
+    {
+      "id": "Q13",
+      "domain": "Core Workflow",
+      "type": "single",
+      "stem": "What does the `-/+` symbol in `terraform plan` output indicate?",
+      "options": [
+        { "id": "A", "text": "Update in place" },
+        { "id": "B", "text": "Create the resource" },
+        { "id": "C", "text": "Destroy and recreate (forced replacement)" },
+        { "id": "D", "text": "Drift detected" }
+      ],
+      "correct": ["C"],
+      "explanation": "`-/+` means destroy and recreate — usually because an immutable attribute changed. `+` is create, `~` is update in place, `-` is destroy."
+    },
+    {
+      "id": "Q14",
+      "domain": "Core Workflow",
+      "type": "single",
+      "stem": "You want to apply exactly what was shown in a plan, with no chance of new changes appearing. What do you do?",
+      "options": [
+        { "id": "A", "text": "Run `terraform apply -auto-approve` immediately after `terraform plan`" },
+        { "id": "B", "text": "Save the plan with `terraform plan -out=tfplan`, then `terraform apply tfplan`" },
+        { "id": "C", "text": "Use `terraform apply -refresh-only`" },
+        { "id": "D", "text": "Run `terraform apply -target=<resource>`" }
+      ],
+      "correct": ["B"],
+      "explanation": "A saved plan file locks in the actions. `apply tfplan` executes exactly that — no re-planning, no refresh, no prompt. This is the recommended CI/CD pattern."
+    },
+    {
+      "id": "Q15",
+      "domain": "Core Workflow",
+      "type": "single",
+      "stem": "What does `terraform fmt -recursive` do?",
+      "options": [
+        { "id": "A", "text": "Recursively destroys all resources" },
+        { "id": "B", "text": "Rewrites all `.tf` files in the current directory and subdirectories in canonical style" },
+        { "id": "C", "text": "Recursively validates all child modules" },
+        { "id": "D", "text": "Re-formats the state file" }
+      ],
+      "correct": ["B"],
+      "explanation": "`fmt` is the formatter. `-recursive` makes it descend into subdirectories. It only touches `.tf` files on disk."
+    },
+    {
+      "id": "Q16",
+      "domain": "Core Workflow",
+      "type": "single",
+      "stem": "Which command would you run after adding a new provider to `required_providers`?",
+      "options": [
+        { "id": "A", "text": "terraform plan" },
+        { "id": "B", "text": "terraform init" },
+        { "id": "C", "text": "terraform validate" },
+        { "id": "D", "text": "terraform refresh" }
+      ],
+      "correct": ["B"],
+      "explanation": "`init` downloads the new provider. Without re-init, `plan` will error with missing provider plugin."
+    },
+    {
+      "id": "Q17",
+      "domain": "Core Workflow",
+      "type": "multi",
+      "stem": "Which of these can `terraform apply` do? (Choose two.)",
+      "options": [
+        { "id": "A", "text": "Re-apply a saved plan file exactly as planned" },
+        { "id": "B", "text": "Run a fresh plan and prompt for approval before changes" },
+        { "id": "C", "text": "Modify the source `.tf` files" },
+        { "id": "D", "text": "Delete the state file backend configuration" }
+      ],
+      "correct": ["A", "B"],
+      "explanation": "`apply` either re-plans (prompting) or applies a saved plan file. It never edits source files or backend config."
+    },
+    {
+      "id": "Q18",
+      "domain": "Core Workflow",
+      "type": "truefalse",
+      "stem": "`terraform destroy` is equivalent to `terraform apply -destroy`.",
+      "options": [
+        { "id": "True", "text": "True" },
+        { "id": "False", "text": "False" }
+      ],
+      "correct": ["True"],
+      "explanation": "Since Terraform 0.15.2, `terraform destroy` is an alias for `terraform apply -destroy`. Same outcome, same prompts, same state update."
+    },
+    {
+      "id": "Q19",
+      "domain": "Configuration",
+      "type": "single",
+      "stem": "What is the precedence of variable values, highest to lowest?",
+      "options": [
+        { "id": "A", "text": "default → env var → tfvars file → -var" },
+        { "id": "B", "text": "-var → -var-file → auto.tfvars → env var → default" },
+        { "id": "C", "text": "env var → -var → tfvars → default" },
+        { "id": "D", "text": "default → tfvars → -var-file → env var → -var" }
+      ],
+      "correct": ["B"],
+      "explanation": "Highest wins. CLI `-var` beats files, files beat env vars (`TF_VAR_*`), env vars beat the variable block's `default`."
+    },
+    {
+      "id": "Q20",
+      "domain": "Configuration",
+      "type": "single",
+      "stem": "Which variable type is correct for `[\"10.0.1.0/24\", \"10.0.2.0/24\"]`?",
+      "options": [
+        { "id": "A", "text": "string" },
+        { "id": "B", "text": "list(string)" },
+        { "id": "C", "text": "set(any)" },
+        { "id": "D", "text": "map(string)" }
+      ],
+      "correct": ["B"],
+      "explanation": "An ordered list of strings. A `set` would also accept it but loses order; `list(string)` is the most precise type."
+    },
+    {
+      "id": "Q21",
+      "domain": "Configuration",
+      "type": "single",
+      "stem": "What does `var.env == \"prod\" ? \"GRS\" : \"LRS\"` return when var.env is \"prod\"?",
+      "options": [
+        { "id": "A", "text": "\"prod\"" },
+        { "id": "B", "text": "\"LRS\"" },
+        { "id": "C", "text": "\"GRS\"" },
+        { "id": "D", "text": "error — invalid syntax" }
+      ],
+      "correct": ["C"],
+      "explanation": "A ternary: condition true → first value, false → second. `var.env == \"prod\"` is true, so `\"GRS\"`."
+    },
+    {
+      "id": "Q22",
+      "domain": "Configuration",
+      "type": "single",
+      "stem": "Which function would you use to combine two maps, with the second overriding overlapping keys?",
+      "options": [
+        { "id": "A", "text": "concat()" },
+        { "id": "B", "text": "merge()" },
+        { "id": "C", "text": "union()" },
+        { "id": "D", "text": "tomap()" }
+      ],
+      "correct": ["B"],
+      "explanation": "`merge(map_a, map_b)` combines, with later arguments overriding earlier on conflict. `concat` is for lists."
+    },
+    {
+      "id": "Q23",
+      "domain": "Configuration",
+      "type": "single",
+      "stem": "What does `sensitive = true` on an output do?",
+      "options": [
+        { "id": "A", "text": "Encrypts the value in the state file" },
+        { "id": "B", "text": "Redacts the value from CLI output" },
+        { "id": "C", "text": "Prevents the value from being stored in state" },
+        { "id": "D", "text": "Both A and B" }
+      ],
+      "correct": ["B"],
+      "explanation": "It hides the value from CLI display. The value is still in state, unencrypted. For true secret hygiene use `ephemeral` and write-only arguments (Terraform 1.10+)."
+    },
+    {
+      "id": "Q24",
+      "domain": "Validation",
+      "type": "single",
+      "stem": "A `validation` block on a variable runs when?",
+      "options": [
+        { "id": "A", "text": "At apply time, after the resource is created" },
+        { "id": "B", "text": "At plan time, before resources are processed" },
+        { "id": "C", "text": "Only when `terraform validate` is run" },
+        { "id": "D", "text": "Only in CI pipelines" }
+      ],
+      "correct": ["B"],
+      "explanation": "Variable validation runs at plan time as soon as the variable's value is known. Fails the plan if the condition is false."
+    },
+    {
+      "id": "Q25",
+      "domain": "Validation",
+      "type": "single",
+      "stem": "Where is a `precondition` block defined?",
+      "options": [
+        { "id": "A", "text": "Top-level in a .tf file" },
+        { "id": "B", "text": "Inside a resource, data, or output `lifecycle { }` block" },
+        { "id": "C", "text": "Inside a variable block" },
+        { "id": "D", "text": "Inside `terraform { }`" }
+      ],
+      "correct": ["B"],
+      "explanation": "`precondition` and `postcondition` live inside `lifecycle`. `validation` lives inside `variable`. `check` is the only one at top-level."
+    },
+    {
+      "id": "Q26",
+      "domain": "Lifecycle",
+      "type": "single",
+      "stem": "Which lifecycle meta-argument creates the new resource BEFORE destroying the old one during a replacement?",
+      "options": [
+        { "id": "A", "text": "prevent_destroy" },
+        { "id": "B", "text": "ignore_changes" },
+        { "id": "C", "text": "create_before_destroy" },
+        { "id": "D", "text": "replace_triggered_by" }
+      ],
+      "correct": ["C"],
+      "explanation": "`create_before_destroy = true` flips the default destroy-then-create order. Useful for zero-downtime replacements."
+    },
+    {
+      "id": "Q27",
+      "domain": "Lifecycle",
+      "type": "single",
+      "stem": "What happens if you try to `terraform destroy` a resource with `prevent_destroy = true`?",
+      "options": [
+        { "id": "A", "text": "The destroy succeeds with a warning" },
+        { "id": "B", "text": "The destroy succeeds after a 10-second pause" },
+        { "id": "C", "text": "Terraform errors out and does not destroy the resource" },
+        { "id": "D", "text": "Terraform prompts you twice for confirmation" }
+      ],
+      "correct": ["C"],
+      "explanation": "`prevent_destroy` makes any plan that would destroy the resource fail outright. To actually destroy, you remove the lifecycle rule first."
+    },
+    {
+      "id": "Q28",
+      "domain": "Secrets",
+      "type": "single",
+      "stem": "What is a write-only argument (`*_wo`) in Terraform 1.10+?",
+      "options": [
+        { "id": "A", "text": "An argument that can only be set once and never changed" },
+        { "id": "B", "text": "A resource attribute that is sent to the API but not stored in state" },
+        { "id": "C", "text": "A read-only computed output" },
+        { "id": "D", "text": "A deprecated form of `sensitive = true`" }
+      ],
+      "correct": ["B"],
+      "explanation": "Write-only arguments are passed to the cloud API but never persisted in state. Paired with `*_wo_version`, they let you rotate secrets without leaking them."
+    },
+    {
+      "id": "Q29",
+      "domain": "Secrets",
+      "type": "single",
+      "stem": "Where should you reference a Vault-stored secret to avoid persisting it in state?",
+      "options": [
+        { "id": "A", "text": "As an input variable with `default`" },
+        { "id": "B", "text": "Via a `data` source for the secret, passing to a regular resource attribute" },
+        { "id": "C", "text": "Via an `ephemeral` resource feeding a `_wo` (write-only) argument" },
+        { "id": "D", "text": "As an environment variable read by the provider" }
+      ],
+      "correct": ["C"],
+      "explanation": "`ephemeral` resources (Terraform 1.10+) are never written to state. Passing them into a write-only argument means the secret reaches the cloud but never lands on disk in the state file."
+    },
+    {
+      "id": "Q30",
+      "domain": "Dependencies",
+      "type": "single",
+      "stem": "Terraform creates resources in dependency order. Which two ways can you express a dependency?",
+      "options": [
+        { "id": "A", "text": "`depends_on` and resource references" },
+        { "id": "B", "text": "`provider` and `version`" },
+        { "id": "C", "text": "`for_each` and `count`" },
+        { "id": "D", "text": "`lifecycle` and `metadata`" }
+      ],
+      "correct": ["A"],
+      "explanation": "References (e.g. `azurerm_resource_group.x.name` inside another resource) create implicit dependencies. `depends_on` creates explicit ones, used when no reference exists."
+    },
+    {
+      "id": "Q31",
+      "domain": "Configuration",
+      "type": "single",
+      "stem": "Given `resource \"aws_instance\" \"web\" { count = 3 }`, what is the address of the second instance?",
+      "options": [
+        { "id": "A", "text": "aws_instance.web[2]" },
+        { "id": "B", "text": "aws_instance.web[1]" },
+        { "id": "C", "text": "aws_instance.web.2" },
+        { "id": "D", "text": "aws_instance.web[\"second\"]" }
+      ],
+      "correct": ["B"],
+      "explanation": "`count` produces a zero-indexed list. Second instance = index 1. `for_each` would let you use string keys like `[\"second\"]`."
+    },
+    {
+      "id": "Q32",
+      "domain": "Configuration",
+      "type": "multi",
+      "stem": "Which arguments are valid meta-arguments on any resource? (Choose four.)",
+      "options": [
+        { "id": "A", "text": "count" },
+        { "id": "B", "text": "for_each" },
+        { "id": "C", "text": "lifecycle" },
+        { "id": "D", "text": "provider" },
+        { "id": "E", "text": "subnet_id" }
+      ],
+      "correct": ["A", "B", "C", "D"],
+      "explanation": "Meta-arguments are reserved on every resource: count, for_each, lifecycle, provider, depends_on. `subnet_id` is a resource-specific argument, not a meta-argument."
+    },
+    {
+      "id": "Q33",
+      "domain": "Modules",
+      "type": "single",
+      "stem": "A module's source is `git::https://github.com/me/tf-modules.git//vnet?ref=v1.2.0`. Where does the version go?",
+      "options": [
+        { "id": "A", "text": "Inside the module call block, as `version = \"1.2.0\"`" },
+        { "id": "B", "text": "As `?ref=v1.2.0` in the URL" },
+        { "id": "C", "text": "In a separate `version` file" },
+        { "id": "D", "text": "In `.terraform.lock.hcl`" }
+      ],
+      "correct": ["B"],
+      "explanation": "For Git sources, version is encoded as `?ref=` (tag/branch/SHA). The `version` argument inside the module block is only valid for Terraform Registry sources."
+    },
+    {
+      "id": "Q34",
+      "domain": "Modules",
+      "type": "multi",
+      "stem": "Where can a Terraform module be sourced from? (Choose three.)",
+      "options": [
+        { "id": "A", "text": "Local file path" },
+        { "id": "B", "text": "Terraform Registry (public or private)" },
+        { "id": "C", "text": "Git over HTTPS or SSH" },
+        { "id": "D", "text": "A Docker container registry" }
+      ],
+      "correct": ["A", "B", "C"],
+      "explanation": "Terraform module sources include: local paths, Terraform Registry, Git, HTTP archives, S3, GCS, Mercurial. Docker registries are not a module source."
+    },
+    {
+      "id": "Q35",
+      "domain": "Modules",
+      "type": "truefalse",
+      "stem": "A variable declared inside a child module is automatically accessible in the root module.",
+      "options": [
+        { "id": "True", "text": "True" },
+        { "id": "False", "text": "False" }
+      ],
+      "correct": ["False"],
+      "explanation": "Variables in child modules are scoped to that module. The root passes values explicitly via `module.foo { ... }`. There is no global variable scope."
+    },
+    {
+      "id": "Q36",
+      "domain": "Modules",
+      "type": "single",
+      "stem": "To access output `vnet_id` from a child module call `module.network`, you reference it as:",
+      "options": [
+        { "id": "A", "text": "module.network.vnet_id" },
+        { "id": "B", "text": "network.vnet_id" },
+        { "id": "C", "text": "output.network.vnet_id" },
+        { "id": "D", "text": "var.network.vnet_id" }
+      ],
+      "correct": ["A"],
+      "explanation": "`module.<MODULE_NAME>.<OUTPUT_NAME>` is the syntax. The output must be explicitly declared in the child module."
+    },
+    {
+      "id": "Q37",
+      "domain": "Modules",
+      "type": "single",
+      "stem": "You publish a private module to HCP Terraform. What's the recommended source format?",
+      "options": [
+        { "id": "A", "text": "git::https://github.com/me/repo.git" },
+        { "id": "B", "text": "app.terraform.io/<ORG>/<MODULE>/<PROVIDER>" },
+        { "id": "C", "text": "https://app.terraform.io/v2/modules/..." },
+        { "id": "D", "text": "./modules/<MODULE>" }
+      ],
+      "correct": ["B"],
+      "explanation": "Private registry modules in HCP Terraform follow `app.terraform.io/<ORG>/<NAME>/<PROVIDER>` and pin version via `version = \"X.Y.Z\"`."
+    },
+    {
+      "id": "Q38",
+      "domain": "Modules",
+      "type": "single",
+      "stem": "What is the minimum recommended way to use a community module from the public Terraform Registry safely?",
+      "options": [
+        { "id": "A", "text": "Always use `latest`" },
+        { "id": "B", "text": "Pin a specific version with `version = \"X.Y.Z\"` or a pessimistic constraint" },
+        { "id": "C", "text": "Fork the repo and reference the fork by Git URL" },
+        { "id": "D", "text": "Vendor the module into your repo as a local source" }
+      ],
+      "correct": ["B"],
+      "explanation": "Pinning prevents accidental breakage when the module author publishes a major version. Forking and vendoring are sometimes done for extra control but pinning is the minimum."
+    },
+    {
+      "id": "Q39",
+      "domain": "State",
+      "type": "single",
+      "stem": "By default, Terraform stores state in which location?",
+      "options": [
+        { "id": "A", "text": "A managed HashiCorp service" },
+        { "id": "B", "text": "The local file `terraform.tfstate` in the working directory" },
+        { "id": "C", "text": "The provider's cloud storage" },
+        { "id": "D", "text": "The lock file `.terraform.lock.hcl`" }
+      ],
+      "correct": ["B"],
+      "explanation": "The default backend is `local`, which writes `terraform.tfstate` (and `.backup`) next to your .tf files. Fine for learning, not for teams."
+    },
+    {
+      "id": "Q40",
+      "domain": "State",
+      "type": "single",
+      "stem": "Why is state locking important?",
+      "options": [
+        { "id": "A", "text": "To encrypt state at rest" },
+        { "id": "B", "text": "To prevent two concurrent `apply` operations from corrupting state" },
+        { "id": "C", "text": "To audit who modified state" },
+        { "id": "D", "text": "To compress state for faster reads" }
+      ],
+      "correct": ["B"],
+      "explanation": "Locking serializes write operations on shared state. Without it, two simultaneous applies could each overwrite the other's changes."
+    },
+    {
+      "id": "Q41",
+      "domain": "State",
+      "type": "multi",
+      "stem": "Which backend natively supports state locking? (Choose three.)",
+      "options": [
+        { "id": "A", "text": "azurerm (Blob lease)" },
+        { "id": "B", "text": "s3 (with DynamoDB or native S3 conditional writes)" },
+        { "id": "C", "text": "local" },
+        { "id": "D", "text": "gcs" }
+      ],
+      "correct": ["A", "B", "D"],
+      "explanation": "azurerm uses blob leases, s3 uses DynamoDB or native conditional writes, gcs uses object metadata. local only locks within one machine — not safe for teams."
+    },
+    {
+      "id": "Q42",
+      "domain": "State",
+      "type": "single",
+      "stem": "Why are variables NOT allowed inside a `backend` block?",
+      "options": [
+        { "id": "A", "text": "They would be a security risk" },
+        { "id": "B", "text": "The backend is initialized before variable values are known" },
+        { "id": "C", "text": "HashiCorp removed that feature in 1.0" },
+        { "id": "D", "text": "It's a syntax limitation that will be lifted in 1.13" }
+      ],
+      "correct": ["B"],
+      "explanation": "`init` configures the backend before any variables exist. Workaround: partial configuration plus `-backend-config=\"key=value\"` flags or files."
+    },
+    {
+      "id": "Q43",
+      "domain": "State",
+      "type": "single",
+      "stem": "You renamed a resource in code from `azurerm_resource_group.rg` to `azurerm_resource_group.main`. What's the safest way to update state without destroying the cloud resource?",
+      "options": [
+        { "id": "A", "text": "Run `terraform apply` — it'll just rename it" },
+        { "id": "B", "text": "Add a `moved { from = ..., to = ... }` block" },
+        { "id": "C", "text": "Delete the state file and re-import" },
+        { "id": "D", "text": "Run `terraform refresh`" }
+      ],
+      "correct": ["B"],
+      "explanation": "A `moved` block tells Terraform to update its state mapping without destroying or re-creating. Once everyone has applied, you can remove the block."
+    },
+    {
+      "id": "Q44",
+      "domain": "State",
+      "type": "single",
+      "stem": "The `removed` block (Terraform 1.7+) lets you:",
+      "options": [
+        { "id": "A", "text": "Forcibly delete a resource regardless of state" },
+        { "id": "B", "text": "Stop managing a resource (optionally without destroying it)" },
+        { "id": "C", "text": "Mark a resource as deprecated" },
+        { "id": "D", "text": "Remove a provider entirely" }
+      ],
+      "correct": ["B"],
+      "explanation": "`removed { from = ... lifecycle { destroy = false } }` removes the resource from state without deleting it from the cloud. Set `destroy = true` to actually destroy."
+    },
+    {
+      "id": "Q45",
+      "domain": "State",
+      "type": "single",
+      "stem": "The modern equivalent of `terraform refresh` is:",
+      "options": [
+        { "id": "A", "text": "`terraform plan -refresh-only` then `terraform apply -refresh-only`" },
+        { "id": "B", "text": "terraform state pull" },
+        { "id": "C", "text": "terraform init -upgrade" },
+        { "id": "D", "text": "terraform reconcile" }
+      ],
+      "correct": ["A"],
+      "explanation": "`terraform refresh` is deprecated as a standalone command. Use `plan -refresh-only` to preview the drift, then `apply -refresh-only` to update state."
+    },
+    {
+      "id": "Q46",
+      "domain": "State",
+      "type": "multi",
+      "stem": "Which information lives in `terraform.tfstate`? (Choose three.)",
+      "options": [
+        { "id": "A", "text": "Provider versions in use" },
+        { "id": "B", "text": "Resource attributes returned by the cloud at last apply" },
+        { "id": "C", "text": "Mappings from resource addresses to real-world IDs" },
+        { "id": "D", "text": "The current branch of your Git repo" }
+      ],
+      "correct": ["A", "B", "C"],
+      "explanation": "State holds resource mappings, the cached attribute snapshot, and metadata like Terraform/provider versions and a lineage UUID. Git information is not in state."
+    },
+    {
+      "id": "Q47",
+      "domain": "State",
+      "type": "single",
+      "stem": "Which command tells you all addresses present in state?",
+      "options": [
+        { "id": "A", "text": "terraform state list" },
+        { "id": "B", "text": "terraform show" },
+        { "id": "C", "text": "terraform state show" },
+        { "id": "D", "text": "terraform list" }
+      ],
+      "correct": ["A"],
+      "explanation": "`state list` returns the address namespace. `show <address>` returns one resource's full attributes. `terraform show` (no subcommand) prints the full state."
+    },
+    {
+      "id": "Q48",
+      "domain": "State",
+      "type": "single",
+      "stem": "Drift detection answers which question?",
+      "options": [
+        { "id": "A", "text": "Are my modules up to date?" },
+        { "id": "B", "text": "Does the real cloud state still match what's in my state file?" },
+        { "id": "C", "text": "Have my providers changed major version?" },
+        { "id": "D", "text": "Is my state file corrupted?" }
+      ],
+      "correct": ["B"],
+      "explanation": "Drift = state file says one thing, real cloud says another. `plan -refresh-only` and HCP Terraform's drift detection both surface this."
+    },
+    {
+      "id": "Q49",
+      "domain": "Import",
+      "type": "single",
+      "stem": "Which CLI invocation correctly imports an existing Azure resource group into Terraform state?",
+      "options": [
+        { "id": "A", "text": "terraform state import azurerm_resource_group.x /subscriptions/.../rg-x" },
+        { "id": "B", "text": "terraform import azurerm_resource_group.x /subscriptions/.../rg-x" },
+        { "id": "C", "text": "terraform pull azurerm_resource_group.x" },
+        { "id": "D", "text": "az import azurerm_resource_group.x ..." }
+      ],
+      "correct": ["B"],
+      "explanation": "`terraform import <ADDRESS> <CLOUD_ID>`. The newer alternative is an `import { }` block in code, which can be combined with `-generate-config-out=` to scaffold the resource block."
+    },
+    {
+      "id": "Q50",
+      "domain": "Import",
+      "type": "single",
+      "stem": "The `import { }` block + `-generate-config-out=` (Terraform 1.5+) does what?",
+      "options": [
+        { "id": "A", "text": "Auto-generates the resource block by reading cloud state" },
+        { "id": "B", "text": "Imports without needing credentials" },
+        { "id": "C", "text": "Imports across regions" },
+        { "id": "D", "text": "Imports without modifying state" }
+      ],
+      "correct": ["A"],
+      "explanation": "`terraform plan -generate-config-out=generated.tf` produces a starter `resource` block based on what's in the cloud. You then refine and commit it."
+    },
+    {
+      "id": "Q51",
+      "domain": "CLI / Logging",
+      "type": "single",
+      "stem": "To see detailed provider/HTTP debugging during a run, set:",
+      "options": [
+        { "id": "A", "text": "TF_DEBUG=1" },
+        { "id": "B", "text": "TF_LOG=DEBUG (or TRACE)" },
+        { "id": "C", "text": "terraform --verbose" },
+        { "id": "D", "text": "TF_VERBOSE=1" }
+      ],
+      "correct": ["B"],
+      "explanation": "`TF_LOG` accepts TRACE, DEBUG, INFO, WARN, ERROR, OFF. Set `TF_LOG_PATH=tf.log` to write to a file. TRACE may include secrets — treat the log file as sensitive."
+    },
+    {
+      "id": "Q52",
+      "domain": "CLI / Logging",
+      "type": "single",
+      "stem": "Which is NOT a valid `TF_LOG` value?",
+      "options": [
+        { "id": "A", "text": "TRACE" },
+        { "id": "B", "text": "INFO" },
+        { "id": "C", "text": "VERBOSE" },
+        { "id": "D", "text": "OFF" }
+      ],
+      "correct": ["C"],
+      "explanation": "Valid: TRACE, DEBUG, INFO, WARN, ERROR, OFF. VERBOSE is not recognized — it's silently ignored."
+    },
+    {
+      "id": "Q53",
+      "domain": "HCP Terraform",
+      "type": "single",
+      "stem": "In HCP Terraform, the relationship between organizations, projects, and workspaces is:",
+      "options": [
+        { "id": "A", "text": "Workspace → Organization → Project" },
+        { "id": "B", "text": "Organization → Project → Workspace" },
+        { "id": "C", "text": "Project → Workspace → Organization" },
+        { "id": "D", "text": "Workspace and Project are the same thing" }
+      ],
+      "correct": ["B"],
+      "explanation": "Top to bottom: Organization (tenant) → Project (grouping with shared vars/RBAC) → Workspace (one state file)."
+    },
+    {
+      "id": "Q54",
+      "domain": "HCP Terraform",
+      "type": "single",
+      "stem": "Which `terraform { }` block enables HCP Terraform integration in a config?",
+      "options": [
+        { "id": "A", "text": "backend \"remote\" { }" },
+        { "id": "B", "text": "cloud { }" },
+        { "id": "C", "text": "hcp { }" },
+        { "id": "D", "text": "workspace { }" }
+      ],
+      "correct": ["B"],
+      "explanation": "`cloud { organization = \"x\"; workspaces { name = \"y\" } }` is the modern integration block. `backend \"remote\"` still works but is legacy."
+    },
+    {
+      "id": "Q55",
+      "domain": "HCP Terraform",
+      "type": "single",
+      "stem": "A workspace's execution mode determines where plan/apply runs. Which is the recommended default?",
+      "options": [
+        { "id": "A", "text": "Local" },
+        { "id": "B", "text": "Remote" },
+        { "id": "C", "text": "Agent" },
+        { "id": "D", "text": "Manual" }
+      ],
+      "correct": ["B"],
+      "explanation": "Remote = runs in HCP Terraform's infrastructure with logs, history, and policy enforcement. Local and Agent modes exist for specific needs."
+    },
+    {
+      "id": "Q56",
+      "domain": "HCP Terraform",
+      "type": "single",
+      "stem": "A Variable Set in HCP Terraform is best used for:",
+      "options": [
+        { "id": "A", "text": "Reusable groups of variables applied across multiple workspaces" },
+        { "id": "B", "text": "Per-run dynamic variables" },
+        { "id": "C", "text": "Encrypted state files" },
+        { "id": "D", "text": "Pipeline triggers" }
+      ],
+      "correct": ["A"],
+      "explanation": "Variable sets bundle variables (often cloud credentials or common tags) and attach to many workspaces. They keep credentials in one place."
+    },
+    {
+      "id": "Q57",
+      "domain": "HCP Terraform",
+      "type": "multi",
+      "stem": "Sentinel/OPA policy enforcement levels in HCP Terraform are: (Choose three.)",
+      "options": [
+        { "id": "A", "text": "advisory" },
+        { "id": "B", "text": "soft-mandatory" },
+        { "id": "C", "text": "hard-mandatory" },
+        { "id": "D", "text": "panic" }
+      ],
+      "correct": ["A", "B", "C"],
+      "explanation": "advisory logs but doesn't block. soft-mandatory blocks but a privileged user can override. hard-mandatory blocks with no override. panic is not a level."
+    },
+    {
+      "id": "Q58",
+      "domain": "HCP Terraform",
+      "type": "truefalse",
+      "stem": "HCP Terraform's workspaces and CLI `terraform workspace` (local) workspaces are the same concept.",
+      "options": [
+        { "id": "True", "text": "True" },
+        { "id": "False", "text": "False" }
+      ],
+      "correct": ["False"],
+      "explanation": "They are different concepts. CLI `terraform workspace` creates extra local state files in one config. HCP Terraform workspaces are remote, full-state, project-scoped entities."
+    },
+    {
+      "id": "Q59",
+      "domain": "Best Practices",
+      "type": "multi",
+      "stem": "Which are best practices? (Choose three.)",
+      "options": [
+        { "id": "A", "text": "Pin Terraform and provider versions" },
+        { "id": "B", "text": "Commit `terraform.tfstate` to Git" },
+        { "id": "C", "text": "Use remote state with locking for team work" },
+        { "id": "D", "text": "Use OIDC federation for CI → cloud auth" }
+      ],
+      "correct": ["A", "C", "D"],
+      "explanation": "Pinning versions, using remote state, and OIDC are recommended. Committing state to Git leaks secrets and corrupts collaboration."
+    },
+    {
+      "id": "Q60",
+      "domain": "Best Practices",
+      "type": "single",
+      "stem": "You have one giant Terraform config that manages dev, stage, and prod for a complex app. The team complains about long plan times and risky applies. The best refactor is:",
+      "options": [
+        { "id": "A", "text": "Run `terraform apply -parallelism=100`" },
+        { "id": "B", "text": "Split into one state file per environment, each its own root module" },
+        { "id": "C", "text": "Switch from Terraform to ARM templates" },
+        { "id": "D", "text": "Disable state locking" }
+      ],
+      "correct": ["B"],
+      "explanation": "Smaller blast radius, faster plans, independent applies, separate permissions. The typical layout is `envs/{dev,stage,prod}/` each with its own backend and its own state."
+    }
+  ]
+}

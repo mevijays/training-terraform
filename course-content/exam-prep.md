@@ -75,8 +75,9 @@
 
 ## Practice resources
 
+- 🎯 **This repo's [60-question sample exam](../sample_exam/exam.md)** — start here
 - Official: https://developer.hashicorp.com/terraform/tutorials/certification-004
-- Sample questions: https://developer.hashicorp.com/terraform/tutorials/certification-004/associate-questions
+- Official sample questions: https://developer.hashicorp.com/terraform/tutorials/certification-004/associate-questions-004
 - Bryan Krausen's practice exam course (Udemy) — frequently updated for 004.
 - ITechSchool / Whizlabs / Tutorials Dojo — multiple practice tests.
 
