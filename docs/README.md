@@ -13,23 +13,26 @@ Both contain the **same 60 questions** covering all 9 official 004 objectives.
 
 ## 🚀 Deploy the interactive simulator on GitHub Pages
 
-The `sample_exam/` folder is a self-contained static site. There are two easy ways to publish it.
+The `docs/` folder is a self-contained static site. There are two easy ways to publish it.
 
 ### Option A: GitHub Pages from the repo (recommended)
+
+GitHub Pages supports only two source folders: **root** (`/`) or **`/docs`**. This site uses **`/docs`**.
 
 1. Push the repo to GitHub.
 2. In the repo, go to **Settings → Pages**.
 3. Under **Source**, choose **Deploy from a branch**.
-4. Set **Branch** = `main`, **Folder** = `/` (root). Save.
+4. Set **Branch** = `main`, **Folder** = `/docs`. Save.
 5. After ~30 seconds, your exam will be live at:
    ```
-   https://<your-user>.github.io/<repo-name>/sample_exam/
+   https://<your-user>.github.io/<repo-name>/
    ```
+   (The `/docs` folder becomes the site root — no `/docs/` suffix in the URL.)
 
 ### Option B: Run locally
 
 ```bash
-cd sample_exam/
+cd docs/
 python3 -m http.server 8080
 # then open http://localhost:8080/
 ```
@@ -55,7 +58,7 @@ Fully responsive — works on phones and tablets.
 ## Files
 
 ```
-sample_exam/
+docs/
 ├── index.html              ← entry point (open this)
 ├── questions.json          ← the 60 questions
 ├── exam.md                 ← same questions, in Markdown

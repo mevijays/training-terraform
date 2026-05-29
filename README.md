@@ -16,7 +16,7 @@ This repo is for both **students** (to learn) and **trainers** (to teach). Every
 | Exam table (objectives) | [exam-and-toc.md](exam-and-toc.md) |
 | Course content (start here) | [course-content/README.md](course-content/README.md) |
 | Capstone project | [project/README.md](project/README.md) |
-| **Sample exam (60 MCQs)** | **[sample_exam/exam.md](sample_exam/exam.md)** |
+| **Sample exam (60 MCQs)** | **[docs/exam.md](docs/exam.md)** |
 | GenAI for Terraform engineers | [genai/README.md](genai/README.md) |
 
 ---
@@ -96,7 +96,7 @@ training-terraform/
 ├── Exam-update-004.md       ← 003 vs 004 comparison
 ├── course-content/          ← 17 modules + exam prep
 ├── project/                 ← capstone project (with reference solution in capstone/)
-├── sample_exam/             ← 60 practice MCQs with answers + explanations
+├── docs/                    ← interactive exam simulator (GitHub Pages source) + 60 MCQs
 └── genai/                   ← GenAI concepts and AI coding agents for Terraform
 ```
 
