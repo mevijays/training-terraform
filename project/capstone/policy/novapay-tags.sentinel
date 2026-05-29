@@ -1,0 +1,15 @@
+# Sentinel policy: enforce required tags on every resource group and major resource.
+# Apply as `hard-mandatory` on the prod workspace, `advisory` on dev/stage.
+
+import "tfplan/v2" as tfplan
+
+required_tags = ["env", "owner", "project", "managed_by"]
+
+main = rule {
+  all tfplan.resource_changes as _, rc {
+    rc.type matches "(azurerm_resource_group|azurerm_virtual_network|aws_s3_bucket|azurerm_key_vault|azurerm_linux_virtual_machine)" implies
+      all required_tags as t {
+        rc.change.after.tags contains t
+      }
+  }
+}

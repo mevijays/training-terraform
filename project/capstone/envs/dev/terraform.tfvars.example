@@ -1,0 +1,8 @@
+# Copy to terraform.tfvars and edit. Do NOT commit terraform.tfvars.
+
+# Your SSH public key (one line, OpenSSH format)
+admin_ssh_public_key = "ssh-rsa AAAAB3Nza...your-key-here... user@host"
+
+# Optional overrides
+# azure_location = "westeurope"
+# aws_region     = "us-west-2"
